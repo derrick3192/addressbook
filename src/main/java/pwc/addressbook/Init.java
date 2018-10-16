@@ -20,12 +20,12 @@ public class Init {
 		List<Person> people1 = new ArrayList<>();
 		people1.add(p1);
 		people1.add(p2);
-		bookRepository.save(new Book(people1));
+		bookRepository.save(new Book("bookA", people1));
 		
 		List<Person> people2 = new ArrayList<>();
 		people1.add(p2);
 		people1.add(p3);
-		bookRepository.save(new Book(people2));
+		bookRepository.save(new Book("bookB", people2));
 		
 		
 	}

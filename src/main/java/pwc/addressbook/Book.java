@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -16,13 +15,20 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
+	String name;
+	
 	@OneToMany
 	List<Person> people;
 
 	public Book(){}
 	
-	public Book(List<Person> people) {
+	public Book(String name, List<Person> people) {
+		this.name = name;
 		this.people = people;
+	}
+	
+	public long getId() {
+		return id;
 	}
 	
 	public List<Person> getPeople() {
@@ -33,4 +39,17 @@ public class Book {
 		this.people = people;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", name=" + name + ", people=" + people + "]";
+	}
+
 }
