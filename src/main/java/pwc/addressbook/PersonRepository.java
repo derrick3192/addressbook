@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RepositoryRestResource(collectionResourceRel = "people", path = "people")
 public interface PersonRepository extends PagingAndSortingRepository<Person, Long> {
 
-	List<Person> findByName(@Param("name") String name);
+	List<Person> findByNameOrderByName(@Param("name") String name);
 	
 	@Query(value="SELECT p FROM Person p where (SELECT b FROM Book b WHERE b.id=:book) MEMBER OF p.books ORDER BY p.name")
 	List<Person> friends(@Param("book") Long book);
