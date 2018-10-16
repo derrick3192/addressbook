@@ -34,6 +34,14 @@ public class TestPersonRepository {
 	
 	private static final String URL_PREFIX = "http://localhost:8080";
 	
+	Person bob;
+	Person mary;
+	Person jane;
+	Person john;
+	
+	Book book1;
+	Book book2;
+	
 	private RequestSpecification given() {
 		return RestAssured.given();
 	}
@@ -95,32 +103,147 @@ public class TestPersonRepository {
 	public void whenNumberTooLong_expectException() {
 		personRepository.save(new Person("Herbit", "012345678910"));
 	}
+
+	public void createPeople() {
+		bob = personRepository.save(new Person("Bob", "1111111111"));
+		mary = personRepository.save(new Person("Mary", "2222222222"));
+		jane = personRepository.save(new Person("Jane", "3333333333"));
+		john = personRepository.save(new Person("John", "4444444444"));
+	}
+	
+	public void createBook1() {
+		List<Person> people1 = new ArrayList<>();
+		people1.add(bob);
+		people1.add(mary);
+		people1.add(jane);
+		book1 = bookRepository.save(new Book("bookA", people1));
+	}
+	
+	public void createBook2() {
+		List<Person> people2 = new ArrayList<>();
+		people2.add(mary);
+		people2.add(john);
+		people2.add(jane);
+		book2 = bookRepository.save(new Book("bookB", people2));
+	}
+	
+	public void createExampleData() {
+		createPeople();
+		createBook1();
+		createBook2();
+	}
 	
 	@Test
 	public void testUniqueToEachAddressBook() {
-		Person bob = personRepository.save(new Person("Bob", "1111111111"));
-		Person mary = personRepository.save(new Person("Mary", "2222222222"));
-		Person jane = personRepository.save(new Person("Jane", "3333333333"));
-		Person john = personRepository.save(new Person("John", "4444444444"));
+		createExampleData();
+		
+		List<Person> union = personRepository.union(book1.getId(), book2.getId());
+		assertEquals(bob.getName(), union.get(0).getName());
+		assertEquals(john.getName(), union.get(1).getName());
+	}
+	
+	@Test
+	public void testUniqueOnly1BookAllUnique() {
+		
+		createPeople();
 		
 		List<Person> people1 = new ArrayList<>();
 		people1.add(bob);
 		people1.add(mary);
 		people1.add(jane);
-		Book book1 = bookRepository.save(new Book("bookA", people1));
+		book1 = bookRepository.save(new Book("bookA", people1));
+		
+		book2 = bookRepository.save(new Book("book2", new ArrayList<>()));
+		
+		List<Person> union = personRepository.union(book1.getId(), book2.getId());
+		assertEquals(bob.getName(), union.get(0).getName());
+		assertEquals(jane.getName(), union.get(1).getName());
+		assertEquals(mary.getName(), union.get(2).getName());
+	}
+	
+	@Test
+	public void testTwoBooksAllUnique() {
+		
+		createPeople();
+		
+		List<Person> people1 = new ArrayList<>();
+		people1.add(bob);
+		people1.add(mary);
+		book1 = bookRepository.save(new Book("bookA", people1));
 		
 		List<Person> people2 = new ArrayList<>();
-		people2.add(mary);
-		people2.add(john);
 		people2.add(jane);
-		Book book2 = bookRepository.save(new Book("bookB", people2));
+		people2.add(john);
+		book2 = bookRepository.save(new Book("book2",people2));
 		
 		List<Person> union = personRepository.union(book1.getId(), book2.getId());
 		
-		assertEquals("Bob", union.get(0).getName());
-		assertEquals("John", union.get(1).getName());
+		assertEquals(4, union.size());
+		assertEquals(bob.getName(), union.get(0).getName());
+		assertEquals(jane.getName(), union.get(1).getName());
+		assertEquals(john.getName(), union.get(2).getName());
+		assertEquals(mary.getName(), union.get(3).getName());
 	}
 	
+	@Test
+	public void testTwoBooksNoneUnique() {
+		
+		createPeople();
+		
+		List<Person> people1 = new ArrayList<>();
+		people1.add(bob);
+		people1.add(mary);
+		people1.add(jane);
+		people1.add(john);
+		book1 = bookRepository.save(new Book("bookA", people1));
+		
+		List<Person> people2 = new ArrayList<>();
+		people2.add(bob);
+		people2.add(mary);
+		people2.add(jane);
+		people2.add(john);
+		book2 = bookRepository.save(new Book("book2",people2));
+		
+		List<Person> union = personRepository.union(book1.getId(), book2.getId());
+		
+		assertEquals(0, union.size());
+	}
+	
+	
+	@Test
+	public void testFindByName() {
+		createExampleData();
+		
+		List<Person> johns = personRepository.findByNameOrderByName("John");
+		assertEquals(1, johns.size());
+		assertEquals("John", johns.get(0).getName());
+	}
+
+	@Test
+	public void testFriendsForBook1() {
+		createExampleData();
+		
+		List<Person> friends = personRepository.friends(book1.getId());
+		
+		assertEquals(friends.size(), 3);
+		assertEquals(bob.getName(), friends.get(0).getName());
+		assertEquals(jane.getName(), friends.get(1).getName());
+		assertEquals(mary.getName(), friends.get(2).getName());
+		
+	}
+	
+	@Test
+	public void testFriendsForBook2() {
+		createExampleData();
+		
+		List<Person> friends = personRepository.friends(book2.getId());
+		
+		assertEquals(friends.size(), 3);
+		assertEquals(jane.getName(), friends.get(0).getName());
+		assertEquals(john.getName(), friends.get(1).getName());
+		assertEquals(mary.getName(), friends.get(2).getName());
+		
+	}
 	
 	@Before
 	public void init() {
