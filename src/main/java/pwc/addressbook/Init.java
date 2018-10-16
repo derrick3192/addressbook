@@ -23,8 +23,8 @@ public class Init {
 		bookRepository.save(new Book("bookA", people1));
 		
 		List<Person> people2 = new ArrayList<>();
-		people1.add(p2);
-		people1.add(p3);
+		people2.add(p2);
+		people2.add(p3);
 		bookRepository.save(new Book("bookB", people2));
 		
 		
