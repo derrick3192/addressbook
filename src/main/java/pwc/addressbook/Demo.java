@@ -8,12 +8,16 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * This class creates some demo data, if you do wish this data to be created on startup, you will need to set the spring profile to demo,
+ * i.e. : uncomment #spring.profiles.active=demo in application.properties
+ */
 @Profile("demo")
 @Component
-public class Init {
+public class Demo {
 
 	@Autowired	
-	public Init(PersonRepository personRepository, BookRepository bookRepository) {
+	public Demo(PersonRepository personRepository, BookRepository bookRepository) {
 		
 		
 		Person bob = personRepository.save(new Person("Bob", "1111111111"));

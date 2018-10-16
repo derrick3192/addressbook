@@ -27,7 +27,7 @@ public class SystemExceptionHandler {
 	
 	
 	/**
-	 * Returns a better exception message, such as return 400 error status code for 
+	 * Returns a better exception message, such as return 400 error status code for validation errors with the individual validation errors added to the message
 	 * @param exception
 	 * @param request
 	 * @return
