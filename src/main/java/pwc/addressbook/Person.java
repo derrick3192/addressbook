@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Person {
@@ -16,7 +19,12 @@ public class Person {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
+	@NotNull(message="name cannot be null")
+	@Size(min=3, max=50, message="name must be between 3 & 50 characters")
 	private String name;
+	
+	@NotNull(message="number cannot be null")
+	@Pattern(message="must be a mobile number with 10 digits", regexp="(^$|[0-9]{10})")
 	private String number;
 	
 	@ManyToMany(mappedBy = "people")

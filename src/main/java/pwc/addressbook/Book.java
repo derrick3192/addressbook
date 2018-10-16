@@ -7,7 +7,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
+/**
+ * Represents an address book i.e. a collection of people with their phone numbers
+ */
 @Entity
 public class Book {
 
@@ -15,6 +20,8 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
+	@NotNull(message="name cannot be null")
+	@Size(min=3, max=50, message="name must be between 3 & 50 characters")
 	String name;
 	
 	@ManyToMany
