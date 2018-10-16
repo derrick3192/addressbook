@@ -1,0 +1,216 @@
+{
+	"variables": [],
+	"info": {
+		"name": "AddressBook",
+		"_postman_id": "1cf35ce9-421d-a5bc-27de-5f83a52d9c41",
+		"description": "Some REST Requests for working with the API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Person",
+			"request": {
+				"url": "http://localhost:8080/people",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\" : \"Derrick Futschik\",\n\t\"number\" : \"0413539670\"\n}"
+				},
+				"description": "Request to create a person"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all People",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/people?sort=name&size=10&page=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people"
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "name",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "size",
+							"value": "10",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "page",
+							"value": "0",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Friends",
+			"request": {
+				"url": "http://localhost:8080/people/search/friends",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Book",
+			"request": {
+				"url": "http://localhost:8080/books",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\" : \"HelloWorldBook\",\n    \"people\": [\n\t\t\"http://localhost:8080/people/1\",\n\t\t\"http://localhost:8080/people/2\",\n\t\t\"http://localhost:8080/people/3\",\n\t\t\"http://localhost:8080/people/4\"\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Books",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/books?sort=name&size=10&page=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "sort",
+							"value": "name",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "size",
+							"value": "10",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "page",
+							"value": "0",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Friends in a book",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/people/search/friends?book=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people",
+						"search",
+						"friends"
+					],
+					"query": [
+						{
+							"key": "book",
+							"value": "5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "ExcludingBooksRequest",
+			"request": {
+				"url": {
+					"raw": "http://localhost:8080/people/search/union?book1=6&book2=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"people",
+						"search",
+						"union"
+					],
+					"query": [
+						{
+							"key": "book1",
+							"value": "6",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "book2",
+							"value": "5",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": "Example request for determining the union minus the intersection."
+			},
+			"response": []
+		}
+	]
+}
