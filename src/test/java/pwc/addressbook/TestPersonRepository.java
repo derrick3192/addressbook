@@ -3,6 +3,9 @@ package pwc.addressbook;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +26,11 @@ import com.jayway.restassured.specification.RequestSpecification;
 @ActiveProfiles("test")
 public class TestPersonRepository {
 
-	@Autowired PersonRepository personRepository;
+	@Autowired
+	PersonRepository personRepository;
+	
+	@Autowired
+	BookRepository bookRepository;
 	
 	private static final String URL_PREFIX = "http://localhost:8080";
 	
@@ -89,6 +96,32 @@ public class TestPersonRepository {
 		personRepository.save(new Person("Herbit", "012345678910"));
 	}
 	
+	@Test
+	public void testUniqueToEachAddressBook() {
+		Person bob = personRepository.save(new Person("Bob", "1111111111"));
+		Person mary = personRepository.save(new Person("Mary", "2222222222"));
+		Person jane = personRepository.save(new Person("Jane", "3333333333"));
+		Person john = personRepository.save(new Person("John", "4444444444"));
+		
+		List<Person> people1 = new ArrayList<>();
+		people1.add(bob);
+		people1.add(mary);
+		people1.add(jane);
+		Book book1 = bookRepository.save(new Book("bookA", people1));
+		
+		List<Person> people2 = new ArrayList<>();
+		people2.add(mary);
+		people2.add(john);
+		people2.add(jane);
+		Book book2 = bookRepository.save(new Book("bookB", people2));
+		
+		List<Person> union = personRepository.union(book1.getId(), book2.getId());
+		
+		assertEquals("Bob", union.get(0).getName());
+		assertEquals("John", union.get(1).getName());
+	}
+	
+	
 	@Before
 	public void init() {
 		cleanup();
@@ -100,6 +133,7 @@ public class TestPersonRepository {
 	}
 	
 	public void cleanup() {
+		bookRepository.deleteAll();
 		personRepository.deleteAll();
 	}
 	

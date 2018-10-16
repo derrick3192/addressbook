@@ -25,6 +25,13 @@ public class SystemExceptionHandler {
 	
 	@Autowired LocalValidatorFactoryBean localValidatorFactoryBean;
 	
+	
+	/**
+	 * Returns a better exception message, such as return 400 error status code for 
+	 * @param exception
+	 * @param request
+	 * @return
+	 */
 	@ExceptionHandler({ Exception.class })
 	public ResponseEntity<Object> handleConstraintViolation(Exception exception, WebRequest request) {
 		
