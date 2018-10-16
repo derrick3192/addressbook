@@ -16,5 +16,12 @@ public interface PersonRepository extends PagingAndSortingRepository<Person, Lon
 	@RequestMapping(value="/search/findallderricks")
 	@Query(value="SELECT * FROM person u where u.name = 'Derrick';", nativeQuery = true)
 	List<Person> findAllDerricks();
+	
+	
+	@RequestMapping(value="/search/union")
+	@Query(value="SELECT p FROM Person p where "+
+	"((SELECT b FROM Book b WHERE b.id=:book1) NOT MEMBER OF p.books AND (SELECT b FROM Book b WHERE b.id=:book2) MEMBER OF p.books) OR "+
+	"((SELECT b FROM Book b WHERE b.id=:book2) NOT MEMBER OF p.books AND (SELECT b FROM Book b WHERE b.id=:book1) MEMBER OF p.books) ")
+	List<Person> union(@Param("book1") Long book1, @Param("book2") Long book2);
 
 }
